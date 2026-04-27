@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tareas Asignadas al Grupo</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <script src="../js/pages/visualizarGrupo.js" defer></script>
+</head>
+<body>
+    <div class="blur-background"></div>
+    <div class="container">
+        <h1 class="title">Estudiantes Inscritos en el Grupo</h1>
+        <table id="estudiantesTable" class="styled-table">
+            <thead>
+                <tr>
+                    <th>Codigo de Estudiante</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+        <div class="inscribirEstudiante">
+            <button id="inscribirEstudianteBtn" class="submit-task-button">Inscribir Estudiante</button>
+        </div>
+        <h1 class="title">Tareas Asignadas al Grupo</h1>
+        <div class="asignarTarea">
+            <button id="asignarTareaBtn" class="submit-task-button">Asignar Tarea</button>
+        </div>
+        <table id="tareasTable" class="styled-table">
+            <thead>
+                <tr>
+                    <th>Tarea</th>
+                    <th>Descripción</th>
+                    <th>Fecha de Inicio</th>
+                    <th>Fecha Final</th>
+                    <th>Entregas</th>
+                    <th>Editar</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Las filas de tareas se llenarán dinámicamente con JavaScript -->
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

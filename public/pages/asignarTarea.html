@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asignar Tarea</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <script src="../js/pages/asignarTarea.js" defer></script>
+</head>
+<body>
+    <div class="blur-background"></div>
+    <div class="container">
+        <h2>Asignar Nueva Tarea</h2>
+
+        <form id="tareaForm">
+            <label for="titulo">Nombre de la tarea:</label>
+            <input type="text" id="titulo" name="titulo" required>
+
+            <label for="descripcion">Descripción:</label>
+            <textarea id="descripcion" name="descripcion" required></textarea>
+
+            <label for="fecha_inicio">Fecha de inicio:</label>
+            <input type="datetime-local" id="fecha_inicio" name="fecha_inicio" required>
+
+            <label for="fecha_final">Fecha final:</label>
+            <input type="datetime-local" id="fecha_final" name="fecha_final" required>
+
+            <button type="submit" class="submit-task-button">Asignar Tarea</button>
+        </form>
+    </div
+</body>
+</html>

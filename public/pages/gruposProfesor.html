@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grupos del Profesor</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <script src="../js/pages/gruposProfesor.js" defer></script> <!-- Agregué defer para cargar el script después del HTML -->
+</head>
+<body>
+    <div class="blur-background"></div>
+    <div class="container">
+        <h1 class="title">Grupos del Profesor</h1> <!-- Cambié el título para mayor claridad -->
+        <table id="gruposTable" class="styled-table"> <!-- Añadí la clase para estilos -->
+            <thead>
+                <tr>
+                    <th>ID del Grupo</th>
+                    <th>Nombre del Grupo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí se llenarán las filas dinámicamente -->
+            </tbody>
+        </table>
+        <div class="asignarTarea">
+            <button id="crearGrupoBtn" class="submit-task-button">Crear Grupo</button>
+        </div>
+    </div>
+</body>
+</html>
