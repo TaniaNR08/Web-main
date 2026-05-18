@@ -1,0 +1,37 @@
+# Dependencias
+node_modules/
+
+# Angular
+frontend/dist/
+frontend/.angular/
+frontend-ng/
+
+# Variables de entorno
+.env
+.env.local
+.env.production
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Claude Code
+.claude/
+
+# Claves SSH / credenciales Azure
+deploy/.azure-keys/
+*.pem
+*_rsa
+*_rsa.pub
+
+# vscode
+.vscode/

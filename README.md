@@ -1,23 +1,65 @@
-# Web
-Full Stack Project: School management web platform. Built with Vanilla CSS, JavaScript, ExpressJS, and powered by MySQL.
-#
+# SchoolWebPro - San Francisco de Asis
+
+Full Stack Project: School management web platform. Frontend Angular 19, backend ExpressJS y MySQL. Arquitectura de microservicios.
+
+🚀 **Live Demo:** [https://schoolweb.livelyrock-c41fe32c.canadacentral.azurecontainerapps.io/](https://schoolweb.livelyrock-c41fe32c.canadacentral.azurecontainerapps.io/)
+
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
 ![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
 ![SQL](https://img.shields.io/badge/SQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
-# Execution Instructions
-Install dependencies:
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Azure](https://img.shields.io/badge/Azure-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white)
+
+## Execution Instructions
+
+**1. Base de datos (Docker):**
+```bash
+cd backend
+docker-compose up -d
 ```
-npm install -g http-server
-npm install express body-parser mysql cors multer
+
+**2. Backend (microservicios):**
+```bash
+cd backend
+npm install
+npm start
 ```
-Execute in /src:
+
+**3. Frontend:**
+```bash
+cd frontend
+npm start
 ```
-node server.js
-```
-# In Action Screenshots
-![Vista 1](assets/1.png)
-![Vista 2](assets/2.png)
-![Vista 3](assets/3.png)
-![Vista 4](assets/4.png)
-![Vista 5](assets/5.png)
+
+Abre `http://localhost:4200` en el navegador.
+
+## Capturas de pantalla
+
+### Sitio público e inicio de sesión
+
+| Página principal | Inicio de sesión |
+| --- | --- |
+| ![Landing](frontend/public/assets/img/landing-principal.png) | ![Login](frontend/public/assets/img/login.png) |
+
+### Panel administrador
+
+| Principal | Noticias | Eventos |
+| --- | --- | --- |
+| ![Admin principal](frontend/public/assets/img/admin-principal.png) | ![Admin noticias](frontend/public/assets/img/admin-noticias.png) | ![Admin eventos](frontend/public/assets/img/admin-eventos.png) |
+
+| Documentos | Mensajes de contacto | Admisiones |
+| --- | --- | --- |
+| ![Admin documentos](frontend/public/assets/img/admin-documentos.png) | ![Admin contactos](frontend/public/assets/img/admin-contactos.png) | ![Admin admisiones](frontend/public/assets/img/admin-admisiones.png) |
+
+### Panel profesor
+
+| Mis grupos | Detalle del grupo | Calificación de entregas |
+| --- | --- | --- |
+| ![Profesor principal](frontend/public/assets/img/profesor-principal.png) | ![Profesor grupo](frontend/public/assets/img/profesor-grupo.png) | ![Profesor calificación](frontend/public/assets/img/profesor-calificacion.png) |
+
+### Panel estudiante
+
+| Mis asignaturas | Tareas y calificaciones |
+| --- | --- |
+| ![Estudiante principal](frontend/public/assets/img/Estudiate-principal.png) | ![Estudiante tareas](frontend/public/assets/img/Estudiante-tareas.png) |

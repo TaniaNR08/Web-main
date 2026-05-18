@@ -1,14 +1,15 @@
 {
-  "name": "schoolwebpro",
+  "name": "schoolwebpro-backend",
   "version": "2.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"node services/auth-service/server.js\" \"node services/groups-service/server.js\" \"node services/tasks-service/server.js\" \"node services/submissions-service/server.js\" \"node services/api-gateway/server.js\"",
+    "start": "concurrently \"node services/auth-service/server.js\" \"node services/groups-service/server.js\" \"node services/tasks-service/server.js\" \"node services/submissions-service/server.js\" \"node services/content-service/server.js\" \"node services/api-gateway/server.js\"",
     "gateway":     "node services/api-gateway/server.js",
     "auth":        "node services/auth-service/server.js",
     "groups":      "node services/groups-service/server.js",
     "tasks":       "node services/tasks-service/server.js",
-    "submissions": "node services/submissions-service/server.js"
+    "submissions": "node services/submissions-service/server.js",
+    "content":     "node services/content-service/server.js"
   },
   "keywords": [],
   "author": "",
