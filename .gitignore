@@ -27,5 +27,11 @@ Thumbs.db
 # Claude Code
 .claude/
 
+# Claves SSH / credenciales Azure
+deploy/.azure-keys/
+*.pem
+*_rsa
+*_rsa.pub
+
 # vscode
 .vscode/

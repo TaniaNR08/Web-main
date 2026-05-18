@@ -2,11 +2,14 @@
 
 Full Stack Project: School management web platform. Frontend Angular 19, backend ExpressJS y MySQL. Arquitectura de microservicios.
 
+🚀 **Live Demo:** [https://schoolweb.livelyrock-c41fe32c.canadacentral.azurecontainerapps.io/](https://schoolweb.livelyrock-c41fe32c.canadacentral.azurecontainerapps.io/)
+
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
 ![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
 ![SQL](https://img.shields.io/badge/SQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Azure](https://img.shields.io/badge/Azure-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white)
 
 ## Execution Instructions
 
