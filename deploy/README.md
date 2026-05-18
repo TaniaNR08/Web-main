@@ -1,6 +1,20 @@
-# Despliegue Azure (VM + Docker)
+# Despliegue Azure
 
- Este flujo usa **MySQL en Docker** en la VM (igual que en local).
+## Container Apps (recomendado)
+
+MySQL y la app van en **dos contenedores** (imágenes en ACR). En suscripción *Azure for Students* solo hay **un** Container Apps Environment por región; el script reutiliza el existente (p. ej. del lab de microservicios).
+
+```powershell
+az login
+cd C:\Users\juans\Desktop\www\Web-main
+.\deploy\container-deploy.ps1
+```
+
+Tarda ~15 min (build en ACR). Al terminar muestra la URL `https://...azurecontainerapps.io`.
+
+## VM + Docker (alternativa)
+
+Este flujo usa **MySQL en Docker** en la VM (igual que en local).
 
 ## Requisitos
 

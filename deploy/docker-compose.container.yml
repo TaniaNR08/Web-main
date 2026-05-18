@@ -1,0 +1,17 @@
+services:
+  mysql:
+    image: ${REGISTRY}/schoolweb-mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-170522iris.}
+      MYSQL_DATABASE: auth_db
+
+  schoolweb:
+    image: ${REGISTRY}/schoolweb-app:latest
+    depends_on:
+      - mysql
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: ${MYSQL_ROOT_PASSWORD:-170522iris.}
+    ports:
+      - "80:80"

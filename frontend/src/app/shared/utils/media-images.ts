@@ -41,11 +41,15 @@ function buscarEnMapa(map: Record<string, string>, titulo: string): string | und
 }
 
 export function urlImagenGaleria(titulo: string, urlDb?: string | null): string {
-  return buscarEnMapa(GALERIA_POR_TITULO, titulo) ?? urlDb ?? NOTICIA_DEFAULT;
+  // Prioridad: URL guardada en BD → mapa de respaldo por título → imagen por defecto
+  if (urlDb?.trim()) return urlDb.trim();
+  return buscarEnMapa(GALERIA_POR_TITULO, titulo) ?? NOTICIA_DEFAULT;
 }
 
 export function urlImagenNoticia(titulo: string, urlDb?: string | null): string {
-  return buscarEnMapa(NOTICIAS_POR_TITULO, titulo) ?? urlDb?.trim() ?? NOTICIA_DEFAULT;
+  // Prioridad: URL guardada en BD → mapa de respaldo por título → imagen por defecto
+  if (urlDb?.trim()) return urlDb.trim();
+  return buscarEnMapa(NOTICIAS_POR_TITULO, titulo) ?? NOTICIA_DEFAULT;
 }
 
 function pexels(id: number): string {

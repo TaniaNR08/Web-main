@@ -1,0 +1,17 @@
+﻿services:
+  mysql:
+    image: schoolwebproacr.azurecr.io/schoolweb-mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: "170522iris."
+      MYSQL_DATABASE: auth_db
+
+  schoolweb:
+    image: schoolwebproacr.azurecr.io/schoolweb-app:latest
+    depends_on:
+      - mysql
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: "170522iris."
+    ports:
+      - "80:80"

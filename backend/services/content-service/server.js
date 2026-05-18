@@ -7,70 +7,63 @@ const db = require('./config/database');
 const app = express();
 const PORT = 3006;
 const JWT_SECRET = 'secreto';
-const MAX_FILE_BYTES = 10 * 1024 * 1024;
 
-function safeLimit(raw, fallback = 50, max = 100) {
-  const n = Number(raw);
-  const value = Number.isFinite(n) && n > 0 ? Math.floor(n) : fallback;
-  return Math.min(value, max);
-}
-const ALLOWED_DOC_TYPES = [
-  'application/pdf',
-  'application/msword',
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-];
-
-const upload = multer({
-  storage: multer.memoryStorage(),
-  limits: { fileSize: MAX_FILE_BYTES },
-});
+const upload = multer({ storage: multer.memoryStorage() });
 
 app.use(cors({ origin: '*' }));
-app.use(express.json({ type: ['application/json', 'application/json; charset=utf-8'] }));
-app.use((_req, res, next) => {
-  const json = res.json.bind(res);
-  res.json = (body) => {
-    res.setHeader('Content-Type', 'application/json; charset=utf-8');
-    return json(body);
-  };
-  next();
-});
+app.use(express.json());
+
+/* ── MIDDLEWARES ─────────────────────────────────────────────── */
 
 function authenticate(req, res, next) {
-  const token = req.headers['authorization']?.split(' ')[1];
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'Token requerido' });
   try {
     req.user = jwt.verify(token, JWT_SECRET);
     next();
-  } catch {
+  } catch (err) {
     return res.status(403).json({ error: 'Token inválido' });
   }
 }
 
 function soloAdmin(req, res, next) {
-  if (req.user?.rol !== 'administrador') return res.status(403).json({ error: 'Acceso denegado' });
+  if (req.user.rol !== 'administrador') {
+    return res.status(403).json({ error: 'Acceso denegado' });
+  }
   next();
 }
 
-/* ── INSTITUCIONAL (RF02) ─────────────────────────────────── */
+/* ── INSTITUCIONAL ───────────────────────────────────────────── */
+
+// GET /institucional — public
 app.get('/institucional', async (_req, res) => {
   try {
     const [filas] = await db.promise().execute(
-      'SELECT clave, titulo, contenido FROM Contenido_Institucional ORDER BY clave'
+      'SELECT clave, titulo, contenido FROM Contenido_Institucional'
     );
-    res.json({ secciones: filas });
+    // Devuelve tanto { secciones } (frontend Angular) como { contenido } (legado)
+    const secciones = filas.map(f => ({ clave: f.clave, titulo: f.titulo, contenido: f.contenido }));
+    const contenido = {};
+    for (const fila of filas) {
+      contenido[fila.clave] = { titulo: fila.titulo, contenido: fila.contenido };
+    }
+    res.json({ secciones, contenido });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
+// PATCH /institucional/:clave — upsert, admin only
 app.patch('/institucional/:clave', authenticate, soloAdmin, async (req, res) => {
+  const { clave } = req.params;
   const { titulo, contenido } = req.body;
-  if (!contenido) return res.status(400).json({ error: 'Contenido requerido' });
   try {
     await db.promise().execute(
-      'UPDATE Contenido_Institucional SET titulo = ?, contenido = ? WHERE clave = ?',
-      [titulo ?? '', contenido, req.params.clave]
+      `INSERT INTO Contenido_Institucional (clave, titulo, contenido)
+       VALUES (?, ?, ?)
+       ON DUPLICATE KEY UPDATE titulo = VALUES(titulo), contenido = VALUES(contenido)`,
+      [clave, titulo ?? '', contenido ?? '']
     );
     res.json({ message: 'Contenido actualizado' });
   } catch (err) {
@@ -78,55 +71,73 @@ app.patch('/institucional/:clave', authenticate, soloAdmin, async (req, res) => 
   }
 });
 
-/* ── NOTICIAS (RF03) ──────────────────────────────────────── */
+/* ── NOTICIAS ────────────────────────────────────────────────── */
+
+// GET /noticias?tipo=&limit=20&limite=20 — public
 app.get('/noticias', async (req, res) => {
-  const limite = safeLimit(req.query.limite);
+  const tipo = req.query.tipo;
+  // Acepta tanto 'limit' como 'limite' (frontend Angular usa 'limite')
+  const limit = parseInt(req.query.limit ?? req.query.limite, 10) || 20;
+  // LIMIT embebido (seguro: ya es entero) porque mysql2 execute() no acepta LIMIT ?
   try {
-    const [noticias] = await db.promise().query(
-      `SELECT noticia_id, titulo, contenido, imagen_url, tipo, fecha_publicacion
-       FROM Noticias WHERE activo = TRUE ORDER BY fecha_publicacion DESC LIMIT ${limite}`
-    );
+    let sql;
+    let params;
+    if (tipo) {
+      sql = `SELECT * FROM Noticias WHERE activo = TRUE AND tipo = ?
+             ORDER BY fecha_publicacion DESC LIMIT ${limit}`;
+      params = [tipo];
+    } else {
+      sql = `SELECT * FROM Noticias WHERE activo = TRUE
+             ORDER BY fecha_publicacion DESC LIMIT ${limit}`;
+      params = [];
+    }
+    const [noticias] = await db.promise().execute(sql, params);
     res.json({ noticias });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
+// GET /noticias/:id — public
 app.get('/noticias/:id', async (req, res) => {
   try {
     const [rows] = await db.promise().execute(
       'SELECT * FROM Noticias WHERE noticia_id = ? AND activo = TRUE',
-      [Number(req.params.id)]
+      [req.params.id]
     );
-    if (!rows.length) return res.status(404).json({ error: 'No encontrada' });
+    if (!rows.length) return res.status(404).json({ error: 'Noticia no encontrada' });
     res.json({ noticia: rows[0] });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
+// POST /noticias — admin only
 app.post('/noticias', authenticate, soloAdmin, async (req, res) => {
   const { titulo, contenido, imagen_url, tipo } = req.body;
-  if (!titulo || !contenido) return res.status(400).json({ error: 'Título y contenido requeridos' });
+  if (!titulo?.trim() || !contenido?.trim()) {
+    return res.status(400).json({ error: 'titulo y contenido son requeridos' });
+  }
   try {
-    const [r] = await db.promise().execute(
-      'INSERT INTO Noticias (titulo, contenido, imagen_url, tipo) VALUES (?, ?, ?, ?)',
-      [titulo, contenido, imagen_url ?? null, tipo ?? 'noticia']
+    const [result] = await db.promise().execute(
+      `INSERT INTO Noticias (titulo, contenido, imagen_url, tipo)
+       VALUES (?, ?, ?, ?)`,
+      [titulo.trim(), contenido.trim(), imagen_url?.trim() || null, tipo || 'noticia']
     );
-    res.json({ message: 'Noticia creada', noticia_id: r.insertId });
+    res.json({ message: 'Noticia creada', noticia_id: result.insertId });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
+// PATCH /noticias/:id — admin only
 app.patch('/noticias/:id', authenticate, soloAdmin, async (req, res) => {
-  const { titulo, contenido, imagen_url, tipo, activo } = req.body;
+  const { titulo, contenido, imagen_url, tipo } = req.body;
   try {
     await db.promise().execute(
-      `UPDATE Noticias SET titulo = COALESCE(?, titulo), contenido = COALESCE(?, contenido),
-       imagen_url = COALESCE(?, imagen_url), tipo = COALESCE(?, tipo), activo = COALESCE(?, activo)
+      `UPDATE Noticias SET titulo = ?, contenido = ?, imagen_url = ?, tipo = ?
        WHERE noticia_id = ?`,
-      [titulo, contenido, imagen_url, tipo, activo, Number(req.params.id)]
+      [titulo?.trim(), contenido?.trim(), imagen_url?.trim() || null, tipo, req.params.id]
     );
     res.json({ message: 'Noticia actualizada' });
   } catch (err) {
@@ -134,28 +145,33 @@ app.patch('/noticias/:id', authenticate, soloAdmin, async (req, res) => {
   }
 });
 
+// DELETE /noticias/:id — soft delete, admin only
 app.delete('/noticias/:id', authenticate, soloAdmin, async (req, res) => {
   try {
-    await db.promise().execute('UPDATE Noticias SET activo = FALSE WHERE noticia_id = ?', [
-      Number(req.params.id),
-    ]);
+    await db.promise().execute(
+      'UPDATE Noticias SET activo = FALSE WHERE noticia_id = ?',
+      [req.params.id]
+    );
     res.json({ message: 'Noticia eliminada' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-/* ── EVENTOS / CALENDARIO (RF04) ────────────────────────────── */
+/* ── EVENTOS / CALENDARIO ────────────────────────────────────── */
+
+// GET /eventos?anio= — public
 app.get('/eventos', async (req, res) => {
-  const mes = req.query.mes;
   const anio = req.query.anio;
   try {
-    let sql = 'SELECT * FROM Eventos_Calendario ORDER BY fecha ASC';
-    const params = [];
-    if (mes && anio) {
-      sql = `SELECT * FROM Eventos_Calendario
-             WHERE MONTH(fecha) = ? AND YEAR(fecha) = ? ORDER BY fecha ASC`;
-      params.push(Number(mes), Number(anio));
+    let sql;
+    let params;
+    if (anio) {
+      sql = 'SELECT * FROM Eventos_Calendario WHERE YEAR(fecha) = ? ORDER BY fecha ASC';
+      params = [anio];
+    } else {
+      sql = 'SELECT * FROM Eventos_Calendario ORDER BY fecha ASC';
+      params = [];
     }
     const [eventos] = await db.promise().execute(sql, params);
     res.json({ eventos });
@@ -164,52 +180,104 @@ app.get('/eventos', async (req, res) => {
   }
 });
 
+// POST /eventos — admin only
 app.post('/eventos', authenticate, soloAdmin, async (req, res) => {
   const { titulo, descripcion, fecha, tipo, color } = req.body;
-  if (!titulo || !fecha) return res.status(400).json({ error: 'Título y fecha requeridos' });
   try {
-    const [r] = await db.promise().execute(
-      'INSERT INTO Eventos_Calendario (titulo, descripcion, fecha, tipo, color) VALUES (?, ?, ?, ?, ?)',
-      [titulo, descripcion ?? '', fecha, tipo ?? 'general', color ?? '#374151']
+    const [result] = await db.promise().execute(
+      `INSERT INTO Eventos_Calendario (titulo, descripcion, fecha, tipo, color)
+       VALUES (?, ?, ?, ?, ?)`,
+      [titulo, descripcion ?? null, fecha, tipo ?? null, color ?? null]
     );
-    res.json({ message: 'Evento creado', evento_id: r.insertId });
+    res.json({ message: 'Evento creado', evento_id: result.insertId });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-app.patch('/eventos/:id', authenticate, soloAdmin, async (req, res) => {
-  const { titulo, descripcion, fecha, tipo, color } = req.body;
-  try {
-    await db.promise().execute(
-      `UPDATE Eventos_Calendario SET titulo = COALESCE(?, titulo), descripcion = COALESCE(?, descripcion),
-       fecha = COALESCE(?, fecha), tipo = COALESCE(?, tipo), color = COALESCE(?, color)
-       WHERE evento_id = ?`,
-      [titulo, descripcion, fecha, tipo, color, Number(req.params.id)]
-    );
-    res.json({ message: 'Evento actualizado' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
+// DELETE /eventos/:id — hard delete, admin only
 app.delete('/eventos/:id', authenticate, soloAdmin, async (req, res) => {
   try {
-    await db.promise().execute('DELETE FROM Eventos_Calendario WHERE evento_id = ?', [
-      Number(req.params.id),
-    ]);
+    await db.promise().execute(
+      'DELETE FROM Eventos_Calendario WHERE evento_id = ?',
+      [req.params.id]
+    );
     res.json({ message: 'Evento eliminado' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-/* ── DOCUMENTOS / DESCARGAS (RF06) ──────────────────────────── */
+/* ── GALERIA ─────────────────────────────────────────────────── */
+
+// GET /galeria/categorias — public (debe ir antes de /galeria/:id si hubiera)
+app.get('/galeria/categorias', async (_req, res) => {
+  try {
+    const [rows] = await db.promise().execute(
+      'SELECT DISTINCT categoria FROM Galeria WHERE activo = TRUE AND categoria IS NOT NULL ORDER BY categoria'
+    );
+    res.json({ categorias: rows.map(r => r.categoria) });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /galeria?categoria= — public
+app.get('/galeria', async (req, res) => {
+  const categoria = req.query.categoria;
+  try {
+    let sql;
+    let params;
+    if (categoria) {
+      sql = 'SELECT * FROM Galeria WHERE activo = TRUE AND categoria = ? ORDER BY fecha DESC';
+      params = [categoria];
+    } else {
+      sql = 'SELECT * FROM Galeria WHERE activo = TRUE ORDER BY fecha DESC';
+      params = [];
+    }
+    const [galeria] = await db.promise().execute(sql, params);
+    res.json({ galeria, items: galeria }); // items por compatibilidad
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /galeria — admin only
+app.post('/galeria', authenticate, soloAdmin, async (req, res) => {
+  const { titulo, url, tipo, categoria } = req.body;
+  try {
+    const [result] = await db.promise().execute(
+      `INSERT INTO Galeria (titulo, url, tipo, categoria)
+       VALUES (?, ?, ?, ?)`,
+      [titulo, url, tipo ?? 'imagen', categoria ?? null]
+    );
+    res.json({ message: 'Item agregado', media_id: result.insertId });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// DELETE /galeria/:id — soft delete, admin only
+app.delete('/galeria/:id', authenticate, soloAdmin, async (req, res) => {
+  try {
+    await db.promise().execute(
+      'UPDATE Galeria SET activo = FALSE WHERE media_id = ?',
+      [req.params.id]
+    );
+    res.json({ message: 'Item eliminado' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* ── DOCUMENTOS ──────────────────────────────────────────────── */
+
+// GET /documentos — public, metadata only
 app.get('/documentos', async (_req, res) => {
   try {
     const [documentos] = await db.promise().execute(
       `SELECT doc_id, nombre, categoria, nombre_archivo, fecha_subida
-       FROM Documentos WHERE activo = TRUE ORDER BY fecha_subida DESC`
+       FROM Documentos WHERE activo = TRUE`
     );
     res.json({ documentos });
   } catch (err) {
@@ -217,11 +285,12 @@ app.get('/documentos', async (_req, res) => {
   }
 });
 
+// GET /documentos/:id/descargar — public, binary download
 app.get('/documentos/:id/descargar', async (req, res) => {
   try {
     const [rows] = await db.promise().execute(
-      'SELECT nombre, nombre_archivo, archivo FROM Documentos WHERE doc_id = ? AND activo = TRUE',
-      [Number(req.params.id)]
+      'SELECT nombre_archivo, archivo FROM Documentos WHERE doc_id = ? AND activo = TRUE',
+      [req.params.id]
     );
     if (!rows.length) return res.status(404).json({ error: 'Documento no encontrado' });
     const doc = rows[0];
@@ -233,56 +302,56 @@ app.get('/documentos/:id/descargar', async (req, res) => {
   }
 });
 
+// POST /documentos — multipart, admin only
 app.post('/documentos', authenticate, soloAdmin, upload.single('archivo'), async (req, res) => {
   const { nombre, categoria } = req.body;
   const file = req.file;
-  if (!nombre || !file) return res.status(400).json({ error: 'Nombre y archivo requeridos' });
-  if (!ALLOWED_DOC_TYPES.includes(file.mimetype) && !file.originalname.match(/\.(pdf|doc|docx)$/i)) {
-    return res.status(400).json({ error: 'Tipo de archivo no permitido (PDF, DOC, DOCX)' });
-  }
   try {
-    const [r] = await db.promise().execute(
-      'INSERT INTO Documentos (nombre, categoria, nombre_archivo, archivo) VALUES (?, ?, ?, ?)',
-      [nombre, categoria ?? 'otro', file.originalname, file.buffer]
+    await db.promise().execute(
+      `INSERT INTO Documentos (nombre, categoria, nombre_archivo, archivo)
+       VALUES (?, ?, ?, ?)`,
+      [nombre, categoria ?? null, file ? file.originalname : null, file ? file.buffer : null]
     );
-    res.json({ message: 'Documento subido', doc_id: r.insertId });
+    res.json({ message: 'Documento subido' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
+// DELETE /documentos/:id — soft delete, admin only
 app.delete('/documentos/:id', authenticate, soloAdmin, async (req, res) => {
   try {
-    await db.promise().execute('UPDATE Documentos SET activo = FALSE WHERE doc_id = ?', [
-      Number(req.params.id),
-    ]);
+    await db.promise().execute(
+      'UPDATE Documentos SET activo = FALSE WHERE doc_id = ?',
+      [req.params.id]
+    );
     res.json({ message: 'Documento eliminado' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-/* ── CONTACTO (RF13) ────────────────────────────────────────── */
+/* ── CONTACTO ────────────────────────────────────────────────── */
+
+// POST /contacto — public
 app.post('/contacto', async (req, res) => {
   const { nombre, email, asunto, mensaje } = req.body;
-  if (!nombre || !email || !mensaje) {
-    return res.status(400).json({ error: 'Nombre, email y mensaje son requeridos' });
+  if (!nombre?.trim() || !email?.trim() || !mensaje?.trim()) {
+    return res.status(400).json({ error: 'nombre, email y mensaje son requeridos' });
   }
   try {
     await db.promise().execute(
-      'INSERT INTO Mensajes_Contacto (nombre, email, asunto, mensaje) VALUES (?, ?, ?, ?)',
-      [nombre, email, asunto ?? '', mensaje]
+      `INSERT INTO Mensajes_Contacto (nombre, email, asunto, mensaje)
+       VALUES (?, ?, ?, ?)`,
+      [nombre.trim(), email.trim(), asunto?.trim() || null, mensaje.trim()]
     );
-    console.log(`[content-service] Nuevo mensaje de contacto: ${email} — ${asunto ?? '(sin asunto)'}`);
-    res.json({
-      message: 'Mensaje enviado correctamente. Recibirá confirmación de recepción.',
-      confirmacion: true,
-    });
+    res.json({ message: 'Mensaje enviado correctamente', confirmacion: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
+// GET /contacto/mensajes — admin only (el frontend Angular llama esta ruta)
 app.get('/contacto/mensajes', authenticate, soloAdmin, async (_req, res) => {
   try {
     const [mensajes] = await db.promise().execute(
@@ -294,18 +363,34 @@ app.get('/contacto/mensajes', authenticate, soloAdmin, async (_req, res) => {
   }
 });
 
-app.patch('/contacto/:id/leido', authenticate, soloAdmin, async (req, res) => {
+// GET /contacto — admin only (alias para compatibilidad)
+app.get('/contacto', authenticate, soloAdmin, async (_req, res) => {
   try {
-    await db.promise().execute('UPDATE Mensajes_Contacto SET leido = TRUE WHERE mensaje_id = ?', [
-      Number(req.params.id),
-    ]);
-    res.json({ message: 'Marcado como leido' });
+    const [mensajes] = await db.promise().execute(
+      'SELECT * FROM Mensajes_Contacto ORDER BY fecha DESC'
+    );
+    res.json({ mensajes });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-/* ── ADMISIONES (RF05) ──────────────────────────────────────── */
+// PATCH /contacto/:id/leido — admin only
+app.patch('/contacto/:id/leido', authenticate, soloAdmin, async (req, res) => {
+  try {
+    await db.promise().execute(
+      'UPDATE Mensajes_Contacto SET leido = TRUE WHERE mensaje_id = ?',
+      [req.params.id]
+    );
+    res.json({ message: 'Mensaje marcado como leído' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* ── ADMISIONES ──────────────────────────────────────────────── */
+
+// POST /admisiones — public
 app.post('/admisiones', async (req, res) => {
   const {
     nombre_estudiante,
@@ -317,34 +402,30 @@ app.post('/admisiones', async (req, res) => {
     telefono,
     mensaje,
   } = req.body;
-  if (!nombre_estudiante || !nombre_acudiente || !email) {
-    return res.status(400).json({ error: 'Datos del estudiante y acudiente requeridos' });
-  }
   try {
-    const [r] = await db.promise().execute(
+    const [result] = await db.promise().execute(
       `INSERT INTO Admisiones
-       (nombre_estudiante, fecha_nacimiento, grado_solicitado, nombre_acudiente, parentesco, email, telefono, mensaje)
+         (nombre_estudiante, fecha_nacimiento, grado_solicitado, nombre_acudiente,
+          parentesco, email, telefono, mensaje)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         nombre_estudiante,
-        fecha_nacimiento || null,
-        grado_solicitado ?? '',
+        fecha_nacimiento ?? null,
+        grado_solicitado ?? null,
         nombre_acudiente,
-        parentesco ?? '',
+        parentesco ?? null,
         email,
-        telefono ?? '',
-        mensaje ?? '',
+        telefono ?? null,
+        mensaje ?? null,
       ]
     );
-    res.json({
-      message: 'Solicitud de admisión registrada. La institución revisará su información.',
-      admision_id: r.insertId,
-    });
+    res.json({ message: 'Solicitud de admisión enviada' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
+// GET /admisiones — admin only
 app.get('/admisiones', authenticate, soloAdmin, async (_req, res) => {
   try {
     const [admisiones] = await db.promise().execute(
@@ -356,71 +437,26 @@ app.get('/admisiones', authenticate, soloAdmin, async (_req, res) => {
   }
 });
 
-app.patch('/admisiones/:id', authenticate, soloAdmin, async (req, res) => {
+// PATCH /admisiones/:id/estado — admin only
+app.patch('/admisiones/:id/estado', authenticate, soloAdmin, async (req, res) => {
   const { estado } = req.body;
-  if (!estado) return res.status(400).json({ error: 'Estado requerido' });
+  const estadosValidos = ['pendiente', 'revisada', 'aceptada', 'rechazada'];
+  if (!estadosValidos.includes(estado)) {
+    return res.status(400).json({ error: `Estado inválido. Valores permitidos: ${estadosValidos.join(', ')}` });
+  }
   try {
-    await db.promise().execute('UPDATE Admisiones SET estado = ? WHERE admision_id = ?', [
-      estado,
-      Number(req.params.id),
-    ]);
+    await db.promise().execute(
+      'UPDATE Admisiones SET estado = ? WHERE admision_id = ?',
+      [estado, req.params.id]
+    );
     res.json({ message: 'Estado actualizado' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-/* ── GALERIA (RF15) ─────────────────────────────────────────── */
-app.get('/galeria', async (req, res) => {
-  const categoria = req.query.categoria;
-  try {
-    let sql = 'SELECT * FROM Galeria WHERE activo = TRUE ORDER BY fecha DESC';
-    const params = [];
-    if (categoria) {
-      sql = 'SELECT * FROM Galeria WHERE activo = TRUE AND categoria = ? ORDER BY fecha DESC';
-      params.push(categoria);
-    }
-    const [items] = await db.promise().execute(sql, params);
-    res.json({ galeria: items });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+/* ── START ───────────────────────────────────────────────────── */
 
-app.get('/galeria/categorias', async (_req, res) => {
-  try {
-    const [rows] = await db.promise().execute(
-      'SELECT DISTINCT categoria FROM Galeria WHERE activo = TRUE ORDER BY categoria'
-    );
-    res.json({ categorias: rows.map((r) => r.categoria) });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+app.listen(PORT, () => {
+  console.log(`[content-service] corriendo en puerto ${PORT}`);
 });
-
-app.post('/galeria', authenticate, soloAdmin, async (req, res) => {
-  const { titulo, url, tipo, categoria } = req.body;
-  if (!titulo || !url) return res.status(400).json({ error: 'Título y URL requeridos' });
-  try {
-    const [r] = await db.promise().execute(
-      'INSERT INTO Galeria (titulo, url, tipo, categoria) VALUES (?, ?, ?, ?)',
-      [titulo, url, tipo ?? 'imagen', categoria ?? 'general']
-    );
-    res.json({ message: 'Item agregado', media_id: r.insertId });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.delete('/galeria/:id', authenticate, soloAdmin, async (req, res) => {
-  try {
-    await db.promise().execute('UPDATE Galeria SET activo = FALSE WHERE media_id = ?', [
-      Number(req.params.id),
-    ]);
-    res.json({ message: 'Item eliminado' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.listen(PORT, () => console.log(`[content-service] corriendo en puerto ${PORT}`));

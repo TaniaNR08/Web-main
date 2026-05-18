@@ -157,20 +157,42 @@ type Tab = 'noticias' | 'eventos' | 'documentos' | 'mensajes' | 'admisiones' | '
           @if (tab() === 'galeria') {
             <div class="card p-6 space-y-4">
               <form [formGroup]="galeriaForm" (ngSubmit)="agregarGaleria()" class="grid sm:grid-cols-2 gap-3">
-                <input formControlName="titulo" placeholder="Titulo" class="border rounded-lg px-3 py-2 text-sm">
-                <input formControlName="url" placeholder="URL imagen o video" class="border rounded-lg px-3 py-2 text-sm">
+                <input formControlName="titulo" placeholder="Título" class="border rounded-lg px-3 py-2 text-sm">
+                <div class="sm:col-span-1 space-y-1">
+                  <input formControlName="url" placeholder="URL directa de imagen (ej: https://…/foto.jpg)"
+                    class="border rounded-lg px-3 py-2 text-sm w-full"
+                    (input)="previewUrl.set(galeriaForm.get('url')!.value ?? '')">
+                  <p class="text-xs text-gray-400">Debe ser un enlace directo a la imagen, no una página web.</p>
+                </div>
                 <select formControlName="tipo" class="border rounded-lg px-3 py-2 text-sm">
                   <option value="imagen">Imagen</option>
                   <option value="video">Video</option>
                 </select>
-                <input formControlName="categoria" placeholder="Categoria" class="border rounded-lg px-3 py-2 text-sm">
-                <button type="submit" class="btn-primary sm:col-span-2">Agregar</button>
+                <input formControlName="categoria" placeholder="Categoría (ej: deportes, eventos…)" class="border rounded-lg px-3 py-2 text-sm">
+                @if (previewUrl() && galeriaForm.get('tipo')!.value === 'imagen') {
+                  <div class="sm:col-span-2 flex gap-3 items-start bg-gray-50 rounded-lg p-3">
+                    <img [src]="previewUrl()" alt="Preview" class="w-24 h-16 object-cover rounded border"
+                      (error)="previewError.set(true); previewOk.set(false)"
+                      (load)="previewOk.set(true); previewError.set(false)">
+                    <p class="text-xs mt-1">
+                      @if (previewOk()) { <span class="text-green-600 font-medium">✓ Imagen válida — se verá en la galería</span> }
+                      @else if (previewError()) { <span class="text-red-600 font-medium">✗ URL inválida. Usa el link directo de la imagen (termina en .jpg, .png…)</span> }
+                      @else { <span class="text-gray-400">Cargando preview…</span> }
+                    </p>
+                  </div>
+                }
+                <button type="submit" [disabled]="galeriaForm.invalid || (previewUrl() && previewError())"
+                  class="btn-primary sm:col-span-2 disabled:opacity-50">Agregar</button>
               </form>
               <ul class="divide-y text-sm">
                 @for (g of galeria(); track g.media_id) {
-                  <li class="py-2 flex justify-between">
-                    <span>{{ g.titulo }} ({{ g.categoria }})</span>
-                    <button type="button" class="text-red-600 text-xs" (click)="eliminarGaleria(g.media_id)">Eliminar</button>
+                  <li class="py-2 flex justify-between items-center gap-2">
+                    <div class="flex items-center gap-2 min-w-0">
+                      <img [src]="g.url" class="w-10 h-7 object-cover rounded border flex-shrink-0"
+                        (error)="$any($event.target).style.display='none'">
+                      <span class="truncate">{{ g.titulo }} <span class="text-gray-400">({{ g.categoria }})</span></span>
+                    </div>
+                    <button type="button" class="text-red-600 text-xs flex-shrink-0" (click)="eliminarGaleria(g.media_id)">Eliminar</button>
                   </li>
                 }
               </ul>
@@ -200,6 +222,11 @@ export class AdminContenidoComponent implements OnInit {
   mensajes = signal<MensajeContacto[]>([]);
   admisiones = signal<SolicitudAdmision[]>([]);
   galeria = signal<ItemGaleria[]>([]);
+
+  // Preview de imagen al agregar galería
+  previewUrl   = signal('');
+  previewOk    = signal(false);
+  previewError = signal(false);
 
   docNombre = '';
   docCategoria = 'circular';
@@ -294,7 +321,14 @@ export class AdminContenidoComponent implements OnInit {
   agregarGaleria(): void {
     if (this.galeriaForm.invalid) return;
     this.content.agregarGaleria(this.galeriaForm.getRawValue()).subscribe({
-      next: () => { sw.success('Agregado'); this.galeriaForm.reset({ tipo: 'imagen', categoria: 'general' }); this.cargarTodo(); },
+      next: () => {
+        sw.success('Agregado');
+        this.galeriaForm.reset({ tipo: 'imagen', categoria: 'general' });
+        this.previewUrl.set('');
+        this.previewOk.set(false);
+        this.previewError.set(false);
+        this.cargarTodo();
+      },
     });
   }
 

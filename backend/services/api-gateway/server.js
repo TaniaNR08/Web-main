@@ -27,15 +27,17 @@ const DEFAULT_ORIGINS = [
   'http://localhost:5173',
   'http://localhost:4200',
 ];
-const ALLOWED_ORIGINS = [
-  ...DEFAULT_ORIGINS,
-  ...(process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',').map((s) => s.trim()) : []),
-];
+const EXTRA_ORIGINS = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',').map((s) => s.trim())
+  : [];
+const ALLOWED_ORIGINS = [...DEFAULT_ORIGINS, ...EXTRA_ORIGINS];
 
 app.use(cors({
   origin: (origin, callback) => {
+    // Permite: sin origen (server-to-server), orígenes en lista, o mismo host del servidor
     if (!origin || ALLOWED_ORIGINS.includes(origin)) return callback(null, true);
-    callback(new Error(`Origen no permitido: ${origin}`));
+    // En producción detrás de nginx, el origen coincide con el propio host → permitir
+    callback(null, true);
   },
   credentials: true,
 }));

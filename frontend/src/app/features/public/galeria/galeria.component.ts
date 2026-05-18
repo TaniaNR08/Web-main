@@ -30,7 +30,7 @@ import { urlImagenGaleria } from '../../../shared/utils/media-images';
                 <iframe [src]="item.url" title="{{ item.titulo }}" loading="lazy"></iframe>
               } @else {
                 <img [src]="imgUrl(item)" [alt]="item.titulo" loading="lazy" referrerpolicy="no-referrer"
-                     (error)="onImgError($event, item.titulo)">
+                     (error)="onImgError($event)">
               }
               <figcaption>{{ item.titulo }} <span class="public-muted">— {{ item.categoria }}</span></figcaption>
             </figure>
@@ -71,10 +71,11 @@ export class GaleriaComponent implements OnInit {
     return urlImagenGaleria(item.titulo, item.url);
   }
 
-  onImgError(e: Event, titulo: string): void {
+  onImgError(e: Event): void {
     const img = e.target as HTMLImageElement;
     if (img.dataset['fallback'] === '1') return;
     img.dataset['fallback'] = '1';
-    img.src = urlImagenGaleria(titulo, null);
+    // Placeholder SVG gris — indica claramente que la imagen no cargó
+    img.src = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='500' viewBox='0 0 800 500'%3E%3Crect width='800' height='500' fill='%23e5e7eb'/%3E%3Ctext x='50%25' y='45%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='40' fill='%239ca3af'%3E%F0%9F%96%BC%3C/text%3E%3Ctext x='50%25' y='62%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='18' fill='%239ca3af'%3EImagen no disponible%3C/text%3E%3C/svg%3E`;
   }
 }
