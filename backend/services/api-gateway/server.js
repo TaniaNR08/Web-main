@@ -21,11 +21,15 @@ const CONTENT_PREFIXES = [
   '/galeria',
 ];
 
-const ALLOWED_ORIGINS = [
+const DEFAULT_ORIGINS = [
   'http://localhost:5500',
   'http://127.0.0.1:5500',
   'http://localhost:5173',
   'http://localhost:4200',
+];
+const ALLOWED_ORIGINS = [
+  ...DEFAULT_ORIGINS,
+  ...(process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',').map((s) => s.trim()) : []),
 ];
 
 app.use(cors({

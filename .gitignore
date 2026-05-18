@@ -1,6 +1,9 @@
 # Dependencias
 node_modules/
 
+# Azure deploy keys
+deploy/.azure-keys/
+
 # Angular
 frontend/dist/
 frontend/.angular/

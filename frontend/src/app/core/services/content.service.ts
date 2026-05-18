@@ -11,8 +11,9 @@ import {
   SeccionInstitucional,
   SolicitudAdmision,
 } from '../../shared/models';
+import { environment } from '../../../environments/environment';
 
-const API = 'http://localhost:3001';
+const API = environment.apiUrl;
 
 @Injectable({ providedIn: 'root' })
 export class ContentService {

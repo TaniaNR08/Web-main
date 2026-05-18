@@ -3,8 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { LoginResponse, Rol } from '../../shared/models';
+import { environment } from '../../../environments/environment';
 
-const API = 'http://localhost:3001';
+const API = environment.apiUrl;
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
