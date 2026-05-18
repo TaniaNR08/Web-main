@@ -238,6 +238,130 @@ body.login-page {
     animation: fadeIn 0.3s ease-out;
 }
 
+/* ========== HEADER ========== */
+.app-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: rgba(10, 10, 10, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 100;
+    gap: 12px;
+}
+
+.header-left,
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 160px;
+}
+
+.header-right {
+    justify-content: flex-end;
+}
+
+.header-center {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    justify-content: center;
+}
+
+.header-logo {
+    height: 34px;
+    width: 34px;
+    border-radius: 50%;
+    object-fit: contain;
+    background: #fff;
+    padding: 2px;
+}
+
+.header-title {
+    font-size: 0.95em;
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+}
+
+.header-back-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.85em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.header-back-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+.header-user {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    line-height: 1.2;
+}
+
+.header-user-role {
+    font-size: 0.7em;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: capitalize;
+    font-weight: 500;
+}
+
+.header-user-id {
+    font-size: 0.82em;
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 600;
+}
+
+.header-logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(220, 50, 50, 0.15);
+    border: 1px solid rgba(220, 50, 50, 0.3);
+    color: #ff6b6b;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.85em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.header-logout-btn:hover {
+    background: rgba(220, 50, 50, 0.28);
+    border-color: rgba(220, 50, 50, 0.5);
+}
+
+body:has(.app-header) .container {
+    margin-top: 80px;
+}
+
+/* ========== FIN HEADER ========== */
+
 form {
     display: flex;
     align-items: center;

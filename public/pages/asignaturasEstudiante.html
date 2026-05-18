@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Asignaturas Inscritas</title>
     <link rel="stylesheet" href="../css/styles.css">
+    <script src="../js/components/header.js"></script>
     <script type="module" src="../js/pages/asignaturasEstudiante.js"></script>
 </head>
 <body>
     <div class="blur-background"></div>
     <div class="container">
-        <h1>Asignaturas</h1>
+        <h1 class="title">Asignaturas</h1>
         <table id="asignaturasTable" class="styled-table">
             <thead>
                 <tr>
@@ -18,10 +19,9 @@
                     <th>Asignatura</th>
                 </tr>
             </thead>
-            <tbody>
-
-            </tbody>
+            <tbody></tbody>
         </table>
     </div>
+    <script>renderHeader({ showBack: false });</script>
 </body>
 </html>

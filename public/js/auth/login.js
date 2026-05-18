@@ -25,6 +25,9 @@ function login(event) {
         }
         sessionStorage.setItem("user", user);
         sessionStorage.setItem("passwd", passwd);
+        if (data.rol) {
+          sessionStorage.setItem("rol", data.rol);
+        }
 
         window.location.href = data.redirect;
       }

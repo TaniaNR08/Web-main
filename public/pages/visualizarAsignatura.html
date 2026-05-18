@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tareas Asignadas al Estudiante</title>
     <link rel="stylesheet" href="../css/styles.css">
+    <script src="../js/components/header.js"></script>
     <script src="../js/pages/visualizarAsignatura.js" defer></script>
 </head>
 <body>
     <div class="blur-background"></div>
     <div class="container">
-        <h1 class="title">Tareas Asignadas al Estudiante</h1>
+        <h1 class="title">Tareas Asignadas</h1>
         <div class="status-title">
             <span>Estado:</span>
         </div>
@@ -31,15 +32,15 @@
             <thead>
                 <tr>
                     <th>Tarea</th>
-                    <th>Descripción</th>
+                    <th>Descripcion</th>
                     <th>Fecha de Inicio</th>
                     <th>Fecha Final</th>
                     <th>Entregas</th>
                 </tr>
             </thead>
-            <tbody>
-            </tbody>
+            <tbody></tbody>
         </table>
     </div>
+    <script>renderHeader({ showBack: true });</script>
 </body>
 </html>

@@ -57,9 +57,10 @@ app.post("/login", async (req, res) => {
             console.error("Error al consultar los grupos:", err);
           }
           return res.json({
-            redirect: "/pages/gruposProfesor.html", // ✅ CORREGIDO
+            redirect: "/pages/gruposProfesor.html",
             grupos: grupos || [],
-            token
+            token,
+            rol: 'profesor'
           });
         });
       }
@@ -70,9 +71,10 @@ app.post("/login", async (req, res) => {
             console.error("Error al consultar las asignaturas:", err);
           }
           return res.json({
-            redirect: "/pages/asignaturasEstudiante.html", // ✅ CORREGIDO
+            redirect: "/pages/asignaturasEstudiante.html",
             asignaturas: asignaturas || [],
-            token
+            token,
+            rol: 'estudiante'
           });
         });
       }

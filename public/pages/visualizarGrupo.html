@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tareas Asignadas al Grupo</title>
+    <title>Visualizar Grupo</title>
     <link rel="stylesheet" href="../css/styles.css">
+    <script src="../js/components/header.js"></script>
     <script src="../js/pages/visualizarGrupo.js" defer></script>
 </head>
 <body>
@@ -17,9 +18,7 @@
                     <th>Codigo de Estudiante</th>
                 </tr>
             </thead>
-            <tbody>
-
-            </tbody>
+            <tbody></tbody>
         </table>
         <div class="inscribirEstudiante">
             <button id="inscribirEstudianteBtn" class="submit-task-button">Inscribir Estudiante</button>
@@ -32,7 +31,7 @@
             <thead>
                 <tr>
                     <th>Tarea</th>
-                    <th>Descripción</th>
+                    <th>Descripcion</th>
                     <th>Fecha de Inicio</th>
                     <th>Fecha Final</th>
                     <th>Entregas</th>
@@ -40,10 +39,9 @@
                     <th>Eliminar</th>
                 </tr>
             </thead>
-            <tbody>
-                <!-- Las filas de tareas se llenarán dinámicamente con JavaScript -->
-            </tbody>
+            <tbody></tbody>
         </table>
     </div>
+    <script>renderHeader({ showBack: true });</script>
 </body>
 </html>
