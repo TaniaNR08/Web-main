@@ -1,7 +1,7 @@
 var ordenInicial=true
 function isEntregada(tarea_id){
   const user_id=sessionStorage.getItem('user')
-  return fetch('http://localhost:3000/isEntregada',{
+  return fetch('http://localhost:3001/isEntregada',{
     method:'POST',
     headers:{
       'Content-Type':'application/json',
@@ -39,7 +39,7 @@ async function aplicarStrategy(tareas,estrategia){
 }
 async function fetchTareas(){
   var group_id=sessionStorage.getItem('group_id')
-  fetch('http://localhost:3000/listarTareas',{
+  fetch('http://localhost:3001/listarTareas',{
     method:'POST',
     headers:{
       'Content-Type':'application/json',

@@ -5,7 +5,7 @@ document.getElementById("tareaForm").addEventListener("submit",function(event){
   let fecha_inicio=document.getElementById("fecha_inicio").value
   let fecha_final=document.getElementById("fecha_final").value
   let group_id=sessionStorage.getItem('group_id')
-  fetch("http://localhost:3000/asignarTarea",{
+  fetch("http://localhost:3001/asignarTarea",{
     method:"POST",
     headers:{
       "Content-Type":"application/json",

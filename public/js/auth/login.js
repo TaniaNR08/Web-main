@@ -21,10 +21,11 @@ function login(event) {
       } else {
         // guardar token si lo usas
         if (data.token) {
-          localStorage.setItem("token", data.token);
+          sessionStorage.setItem("token", data.token);
         }
+        sessionStorage.setItem("user", user);
+        sessionStorage.setItem("passwd", passwd);
 
-        // redirigir según backend
         window.location.href = data.redirect;
       }
     })

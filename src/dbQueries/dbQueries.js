@@ -1,11 +1,4 @@
-const mysql = require("mysql2");
-
-const connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "170522iris.",
-  database: "dbTareas"
-}); 
+const connection = require("../config/database");
 const verifyUser = (user, passwd) => {
   const query = "SELECT * FROM Usuarios WHERE user_id = ? AND passwd = ?";
 

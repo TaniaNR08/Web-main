@@ -1,6 +1,6 @@
 function fetchEntregas(){
   var tarea_id=sessionStorage.getItem('tarea_id')
-  fetch('http://localhost:3000/verEntregas',{
+  fetch('http://localhost:3001/verEntregas',{
     method:'POST',
     headers:{
       'Content-Type':'application/json',

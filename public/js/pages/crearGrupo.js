@@ -2,7 +2,7 @@ document.getElementById("crearGrupoForm").addEventListener("submit",function(eve
   event.preventDefault()
   let nombre=document.getElementById("nombre").value
   let profesor=sessionStorage.getItem('user')
-  fetch("http://localhost:3000/crearGrupo",{
+  fetch("http://localhost:3001/crearGrupo",{
     method:"POST",
     headers:{
       "Content-Type":"application/json",

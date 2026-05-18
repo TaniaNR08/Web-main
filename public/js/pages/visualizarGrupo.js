@@ -7,7 +7,7 @@ function editarTarea(tarea_id){
   window.location.href='editarTarea.html'
 }
 function eliminarTarea(tarea_id){
-  fetch('http://localhost:3000/eliminarTarea',{
+  fetch('http://localhost:3001/eliminarTarea',{
     method:'POST',
     headers:{
       'Content-Type':"application/json",
@@ -26,7 +26,7 @@ function eliminarTarea(tarea_id){
 }
 function fetchEstudiantes(){
   var group_id=sessionStorage.getItem('group_id')
-  fetch('http://localhost:3000/listarEstudiantes',{
+  fetch('http://localhost:3001/listarEstudiantes',{
     method:'POST',
     headers:{
       'Content-Type':'application/json',
@@ -51,7 +51,7 @@ function fetchEstudiantes(){
 }
 function fetchTareas(){
   var group_id=sessionStorage.getItem('group_id')
-  fetch('http://localhost:3000/listarTareas',{
+  fetch('http://localhost:3001/listarTareas',{
     method:'POST',
     headers:{
       'Content-Type':'application/json',
