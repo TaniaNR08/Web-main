@@ -1,0 +1,8 @@
+{
+  "name": "schoolwebpro-frontend",
+  "version": "2.0.0",
+  "scripts": {
+    "start": "npx http-server . -p 5500 --cors -o"
+  },
+  "description": "SchoolWebPro - San Francisco de Asis - Frontend"
+}

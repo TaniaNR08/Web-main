@@ -13,7 +13,7 @@ function renderHeader({ showBack = true } = {}) {
       </button>` : '<div></div>'}
     </div>
     <div class="header-center">
-      <img src="/assets/logo.png" alt="Logo" class="header-logo" onerror="this.style.display='none'">
+      <img src="/assets/img/logo.png" alt="Logo" class="header-logo" onerror="this.style.display='none'">
       <span class="header-title">San Francisco de Asís</span>
     </div>
     <div class="header-right">
