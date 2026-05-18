@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administrador</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/styles.css">
+    <script type="module" src="/src/pages/panelAdmin.ts"></script>
+</head>
+<body class="min-h-screen bg-cover bg-center bg-no-repeat"
+      style="background-image: url('https://cdn.rt.emap.com/wp-content/uploads/sites/4/2025/06/06173651/1-Godolphin-and-Latymer-School-OCo-dining-library-and-sixth-form_Jim-Stephensoncrop-748x499.webp')">
+
+    <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-0"></div>
+
+    <div class="relative z-10 pt-20 pb-10 px-4">
+
+        <div class="max-w-5xl mx-auto">
+
+            <!-- Crear usuario -->
+            <div class="bg-white/90 backdrop-blur rounded-2xl shadow-xl p-6 mb-6">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">Crear Usuario</h2>
+                <form id="crearUsuarioForm">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+                        <div class="flex flex-col gap-1">
+                            <label class="text-sm font-medium text-gray-600">Identificacion</label>
+                            <input type="number" id="user_id" placeholder="Ej: 1019986000"
+                                class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-black transition" required>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-sm font-medium text-gray-600">Nombre completo</label>
+                            <input type="text" id="nombre" placeholder="Ej: Juan Perez"
+                                class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-black transition" required>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-sm font-medium text-gray-600">Contrasena</label>
+                            <input type="text" id="passwd" placeholder="Contrasena inicial"
+                                class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-black transition" required>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-sm font-medium text-gray-600">Rol</label>
+                            <select id="rol"
+                                class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-black transition bg-white" required>
+                                <option value="">Seleccionar...</option>
+                                <option value="estudiante">Estudiante</option>
+                                <option value="profesor">Profesor</option>
+                                <option value="administrador">Administrador</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center gap-4">
+                        <button type="submit"
+                            class="bg-black text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition">
+                            Crear Usuario
+                        </button>
+                        <p id="formFeedback" class="text-sm font-medium"></p>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Tabla de usuarios -->
+            <div class="bg-white/90 backdrop-blur rounded-2xl shadow-xl p-6">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">Usuarios Registrados</h2>
+                <div class="overflow-x-auto">
+                    <table id="usuariosTable" class="w-full text-sm">
+                        <thead>
+                            <tr class="bg-black text-white">
+                                <th class="px-4 py-3 text-left font-semibold rounded-tl-lg">ID</th>
+                                <th class="px-4 py-3 text-left font-semibold">Nombre</th>
+                                <th class="px-4 py-3 text-left font-semibold">Rol</th>
+                                <th class="px-4 py-3 text-left font-semibold rounded-tr-lg">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</body>
+</html>

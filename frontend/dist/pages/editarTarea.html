@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Tarea</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  <script type="module" crossorigin src="/assets/editarTarea-ZVqC9C1T.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/auth-Dhq6riO7.js">
+  <link rel="modulepreload" crossorigin href="/assets/swal-IefjTSjp.js">
+  <link rel="modulepreload" crossorigin href="/assets/api-BZCA1UKH.js">
+  <link rel="stylesheet" crossorigin href="/assets/auth-Fw3GDQFY.css">
+</head>
+<body class="min-h-screen bg-cover bg-center bg-no-repeat"
+      style="background-image: url('https://cdn.rt.emap.com/wp-content/uploads/sites/4/2025/06/06173651/1-Godolphin-and-Latymer-School-OCo-dining-library-and-sixth-form_Jim-Stephensoncrop-748x499.webp')">
+
+    <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-0"></div>
+
+    <div class="relative z-10 pt-20 pb-10 px-4">
+        <div class="max-w-lg mx-auto">
+
+            <div class="bg-white/90 backdrop-blur rounded-2xl shadow-xl p-6">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">Editar Tarea</h2>
+                <form id="tareaForm" class="flex flex-col gap-4">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-medium text-gray-600" for="titulo">Nombre de la tarea</label>
+                        <input type="text" id="titulo" name="titulo" required
+                            class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-black transition">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-medium text-gray-600" for="descripcion">Descripcion</label>
+                        <textarea id="descripcion" name="descripcion" required rows="3"
+                            class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-black transition resize-none"></textarea>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex flex-col gap-1">
+                            <label class="text-sm font-medium text-gray-600" for="fecha_inicio">Fecha de inicio</label>
+                            <input type="datetime-local" id="fecha_inicio" name="fecha_inicio" required
+                                class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-black transition">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-sm font-medium text-gray-600" for="fecha_final">Fecha final</label>
+                            <input type="datetime-local" id="fecha_final" name="fecha_final" required
+                                class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-black transition">
+                        </div>
+                    </div>
+                    <div class="pt-1">
+                        <button type="submit"
+                            class="w-full bg-black text-white py-2.5 rounded-lg text-sm font-medium hover:bg-gray-800 transition">
+                            Guardar Cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+
+</body>
+</html>

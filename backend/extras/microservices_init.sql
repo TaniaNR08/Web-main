@@ -7,12 +7,14 @@ CREATE DATABASE IF NOT EXISTS auth_db;
 USE auth_db;
 CREATE TABLE IF NOT EXISTS Usuarios (
     user_id INT NOT NULL,
+    nombre VARCHAR(255) NOT NULL,
     passwd VARCHAR(255) NOT NULL,
     rol VARCHAR(255) NOT NULL,
     PRIMARY KEY (user_id)
 );
-INSERT IGNORE INTO Usuarios (user_id, passwd, rol) VALUES (1019986037, 'gcc', 'profesor');
-INSERT IGNORE INTO Usuarios (user_id, passwd, rol) VALUES (1019987036, 'no', 'estudiante');
+INSERT IGNORE INTO Usuarios (user_id, nombre, passwd, rol) VALUES (1000, 'Administrador', 'admin123', 'administrador');
+INSERT IGNORE INTO Usuarios (user_id, nombre, passwd, rol) VALUES (1019986037, 'Profesor Demo', 'gcc', 'profesor');
+INSERT IGNORE INTO Usuarios (user_id, nombre, passwd, rol) VALUES (1019987036, 'Estudiante Demo', 'no', 'estudiante');
 
 -- groups_db
 CREATE DATABASE IF NOT EXISTS groups_db;

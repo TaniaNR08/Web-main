@@ -46,9 +46,88 @@ app.post('/login', async (req, res) => {
       return res.json({ redirect: '/pages/asignaturasEstudiante.html', asignaturas: asignaturas || [], token, rol: userType });
     }
 
+    if (userType === 'administrador') {
+      return res.json({ redirect: '/pages/panelAdmin.html', token, rol: userType });
+    }
+
   } catch (err) {
     console.error('[auth-service] Error:', err.message);
     return res.status(500).json({ error: 'Error del servidor.' });
+  }
+});
+
+// Middleware de autenticacion
+function authenticate(req, res, next) {
+  const token = req.headers['authorization']?.split(' ')[1];
+  if (!token) return res.status(401).json({ error: 'Token requerido' });
+  try {
+    req.user = jwt.verify(token, JWT_SECRET);
+    next();
+  } catch {
+    return res.status(403).json({ error: 'Token invalido' });
+  }
+}
+
+function soloAdmin(req, res, next) {
+  if (req.user?.rol !== 'administrador') return res.status(403).json({ error: 'Acceso denegado' });
+  next();
+}
+
+// GET /usuarios  — listar todos
+app.get('/usuarios', authenticate, soloAdmin, async (req, res) => {
+  try {
+    const [usuarios] = await db.promise().execute(
+      'SELECT user_id, nombre, rol FROM Usuarios ORDER BY rol, user_id'
+    );
+    res.json({ usuarios });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /usuarios  — crear usuario
+app.post('/usuarios', authenticate, soloAdmin, async (req, res) => {
+  const { user_id, nombre, passwd, rol } = req.body;
+  if (!user_id || !nombre || !passwd || !rol) return res.status(400).json({ error: 'Todos los campos son requeridos' });
+  try {
+    const [existe] = await db.promise().execute(
+      'SELECT user_id FROM Usuarios WHERE user_id = ?', [Number(user_id)]
+    );
+    if (existe.length > 0) return res.json({ error: 'El usuario ya existe' });
+    await db.promise().execute(
+      'INSERT INTO Usuarios (user_id, nombre, passwd, rol) VALUES (?, ?, ?, ?)',
+      [Number(user_id), nombre, passwd, rol]
+    );
+    res.json({ message: 'Usuario creado correctamente' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// PATCH /usuarios/:id  — editar usuario
+app.patch('/usuarios/:id', authenticate, soloAdmin, async (req, res) => {
+  const { nombre, passwd, rol } = req.body;
+  if (!nombre || !passwd || !rol) return res.status(400).json({ error: 'Todos los campos son requeridos' });
+  try {
+    await db.promise().execute(
+      'UPDATE Usuarios SET nombre = ?, passwd = ?, rol = ? WHERE user_id = ?',
+      [nombre, passwd, rol, Number(req.params.id)]
+    );
+    res.json({ message: 'Usuario actualizado correctamente' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// DELETE /usuarios/:id  — eliminar usuario
+app.delete('/usuarios/:id', authenticate, soloAdmin, async (req, res) => {
+  try {
+    await db.promise().execute(
+      'DELETE FROM Usuarios WHERE user_id = ?', [Number(req.params.id)]
+    );
+    res.json({ message: 'Usuario eliminado correctamente' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 

@@ -4,25 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Entregas de la Tarea</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../css/styles.css">
-    <script src="../js/components/header.js"></script>
-    <script src="../js/pages/verEntregas.js" defer></script>
+    <script type="module" src="/src/pages/verEntregas.ts"></script>
 </head>
-<body>
-    <div class="blur-background"></div>
-    <div class="container">
-        <h1 class="title">Entregas de la Tarea</h1>
-        <table id="entregasTable" class="styled-table">
-            <thead>
-                <tr>
-                    <th>Estudiante</th>
-                    <th>Fecha de Entrega</th>
-                    <th>Archivo</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+<body class="min-h-screen bg-cover bg-center bg-no-repeat"
+      style="background-image: url('https://cdn.rt.emap.com/wp-content/uploads/sites/4/2025/06/06173651/1-Godolphin-and-Latymer-School-OCo-dining-library-and-sixth-form_Jim-Stephensoncrop-748x499.webp')">
+
+    <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-0"></div>
+
+    <div class="relative z-10 pt-20 pb-10 px-4">
+        <div class="max-w-4xl mx-auto">
+
+            <div class="bg-white/90 backdrop-blur rounded-2xl shadow-xl p-6">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">Entregas de la Tarea</h2>
+                <div class="overflow-x-auto">
+                    <table id="entregasTable" class="w-full text-sm">
+                        <thead>
+                            <tr class="bg-black text-white">
+                                <th class="px-4 py-3 text-left font-semibold rounded-tl-lg">Estudiante</th>
+                                <th class="px-4 py-3 text-left font-semibold">Fecha de Entrega</th>
+                                <th class="px-4 py-3 text-left font-semibold rounded-tr-lg">Archivo</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
     </div>
-    <script>renderHeader({ showBack: true });</script>
+
+
 </body>
 </html>

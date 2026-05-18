@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tareas Asignadas al Estudiante</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  <script type="module" crossorigin src="/assets/visualizarAsignatura-CFLNCqIs.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/auth-Dhq6riO7.js">
+  <link rel="modulepreload" crossorigin href="/assets/swal-IefjTSjp.js">
+  <link rel="modulepreload" crossorigin href="/assets/api-BZCA1UKH.js">
+  <link rel="stylesheet" crossorigin href="/assets/auth-Fw3GDQFY.css">
+</head>
+<body class="min-h-screen bg-cover bg-center bg-no-repeat"
+      style="background-image: url('https://cdn.rt.emap.com/wp-content/uploads/sites/4/2025/06/06173651/1-Godolphin-and-Latymer-School-OCo-dining-library-and-sixth-form_Jim-Stephensoncrop-748x499.webp')">
+
+    <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-0"></div>
+
+    <div class="relative z-10 pt-20 pb-10 px-4">
+        <div class="max-w-5xl mx-auto">
+
+            <div class="bg-white/90 backdrop-blur rounded-2xl shadow-xl p-6">
+                <div class="flex items-center justify-between mb-4 pb-2 border-b border-gray-200">
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-800">Tareas Asignadas</h2>
+                        <!-- Leyenda de estados -->
+                        <div class="flex items-center gap-4 mt-2">
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span>
+                                <span class="text-xs text-gray-600">Muy tarde</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-3 h-3 rounded-full bg-gray-200 border border-gray-400 inline-block"></span>
+                                <span class="text-xs text-gray-600">A Tiempo</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-3 h-3 rounded-full bg-green-500 inline-block"></span>
+                                <span class="text-xs text-gray-600">Entregado</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="cambiarOrdenBtn"
+                        class="bg-black text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition whitespace-nowrap">
+                        Cambiar Orden
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table id="tareasTable" class="w-full text-sm">
+                        <thead>
+                            <tr class="bg-black text-white">
+                                <th class="px-4 py-3 text-left font-semibold rounded-tl-lg">Tarea</th>
+                                <th class="px-4 py-3 text-left font-semibold">Descripcion</th>
+                                <th class="px-4 py-3 text-left font-semibold">Fecha de Inicio</th>
+                                <th class="px-4 py-3 text-left font-semibold">Fecha Final</th>
+                                <th class="px-4 py-3 text-left font-semibold rounded-tr-lg">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</body>
+</html>

@@ -1,8 +1,18 @@
 {
   "name": "schoolwebpro-frontend",
-  "version": "2.0.0",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "start": "npx http-server . -p 5500 --cors -o"
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview"
   },
-  "description": "SchoolWebPro - San Francisco de Asis - Frontend"
+  "dependencies": {
+    "sweetalert2": "^11.14.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "vite": "^6.3.5"
+  }
 }

@@ -1,0 +1,108 @@
+.admin-section {
+    margin-bottom: 40px;
+}
+
+.section-title {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e0e0e0;
+    text-align: left;
+}
+
+.admin-form-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.field-group-admin {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    min-width: 180px;
+}
+
+.field-group-admin label {
+    font-size: 0.85em;
+    font-weight: 500;
+    color: #555;
+    text-align: left;
+}
+
+.field-group-admin input,
+.field-group-admin select {
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.9em;
+    font-family: inherit;
+    outline: none;
+    background: #fff;
+    transition: border-color 0.2s;
+}
+
+.field-group-admin input:focus,
+.field-group-admin select:focus {
+    border-color: #000;
+}
+
+#formFeedback {
+    margin-top: 10px;
+    font-size: 0.88em;
+    font-weight: 500;
+    text-align: left;
+    min-height: 18px;
+}
+
+.acciones-cell {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.btn-editar {
+    background: rgba(3, 105, 161, 0.1);
+    border: 1px solid rgba(3, 105, 161, 0.3);
+    color: #0369a1;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 0.85em;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.btn-editar:hover {
+    background: rgba(3, 105, 161, 0.2);
+}
+
+.btn-eliminar {
+    background: rgba(220, 50, 50, 0.1);
+    border: 1px solid rgba(220, 50, 50, 0.3);
+    color: #cc3333;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 0.85em;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.btn-eliminar:hover {
+    background: rgba(220, 50, 50, 0.2);
+}
+
+.rol-badge {
+    font-size: 0.82em;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.rol-administrador { color: #7c3aed; }
+.rol-profesor      { color: #0369a1; }
+.rol-estudiante    { color: #15803d; }

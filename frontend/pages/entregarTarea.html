@@ -4,23 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Entregar Tarea</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../css/styles.css">
-    <script src="../js/components/header.js"></script>
-    <script src="../js/pages/entregarTarea.js" defer></script>
+    <script type="module" src="/src/pages/entregarTarea.ts"></script>
 </head>
-<body>
-    <div class="blur-background"></div>
-    <div class="container">
-        <h2>Entregar Tarea</h2>
-        <form id="entregarTareaForm">
-            <label for="archivo_entrega">Seleccione el documento:</label>
-            <input type="file" id="archivo_entrega" name="archivo_entrega" required>
-            <input type="hidden" id="fecha_entrega" name="fecha_entrega">
-            <input type="hidden" id="user_id" name="user_id">
-            <input type="hidden" id="tarea_id" name="tarea_id">
-            <button type="submit" class="submit-task-button">Entregar</button>
-        </form>
+<body class="min-h-screen bg-cover bg-center bg-no-repeat"
+      style="background-image: url('https://cdn.rt.emap.com/wp-content/uploads/sites/4/2025/06/06173651/1-Godolphin-and-Latymer-School-OCo-dining-library-and-sixth-form_Jim-Stephensoncrop-748x499.webp')">
+
+    <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-0"></div>
+
+    <div class="relative z-10 pt-20 pb-10 px-4">
+        <div class="max-w-lg mx-auto">
+
+            <div class="bg-white/90 backdrop-blur rounded-2xl shadow-xl p-6">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">Entregar Tarea</h2>
+                <form id="entregarTareaForm" class="flex flex-col gap-4">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-medium text-gray-600" for="archivo_entrega">Seleccione el documento</label>
+                        <input type="file" id="archivo_entrega" name="archivo_entrega" required
+                            class="border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-700 file:mr-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 transition focus:outline-none focus:border-black">
+                    </div>
+                    <input type="hidden" id="fecha_entrega" name="fecha_entrega">
+                    <input type="hidden" id="user_id" name="user_id">
+                    <input type="hidden" id="tarea_id" name="tarea_id">
+                    <div class="pt-1">
+                        <button type="submit"
+                            class="w-full bg-black text-white py-2.5 rounded-lg text-sm font-medium hover:bg-gray-800 transition">
+                            Entregar
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
     </div>
-    <script>renderHeader({ showBack: true });</script>
+
+
 </body>
 </html>

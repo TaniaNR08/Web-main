@@ -19,7 +19,7 @@
                 <h1>San Francisco de Asís</h1>
                 <p>Plataforma de Gestión Escolar</p>
             </div>
-            <form id="formulario" onsubmit="login(event)">
+            <form id="formulario">
                 <div class="field-group">
                     <label for="user">Usuario</label>
                     <div class="field-wrapper">
@@ -45,19 +45,6 @@
             <p id="feedbackText"></p>
         </div>
     </div>
-    <script>
-        function togglePassword() {
-            var passwdInput = document.getElementById("passwd");
-            var toggleBtn = document.querySelector(".toggle-password");
-            if (passwdInput.type === "password") {
-                passwdInput.type = "text";
-                toggleBtn.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
-            } else {
-                passwdInput.type = "password";
-                toggleBtn.innerHTML = '<i class="fa-regular fa-eye"></i>';
-            }
-        }
-    </script>
-    <script src="js/auth/login.js"></script>
+    <script type="module" src="/src/pages/login.ts"></script>
 </body>
 </html>

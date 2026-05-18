@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizar Grupo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  <script type="module" crossorigin src="/assets/visualizarGrupo-DYV8af4K.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/auth-Dhq6riO7.js">
+  <link rel="modulepreload" crossorigin href="/assets/swal-IefjTSjp.js">
+  <link rel="modulepreload" crossorigin href="/assets/api-BZCA1UKH.js">
+  <link rel="stylesheet" crossorigin href="/assets/auth-Fw3GDQFY.css">
+</head>
+<body class="min-h-screen bg-cover bg-center bg-no-repeat"
+      style="background-image: url('https://cdn.rt.emap.com/wp-content/uploads/sites/4/2025/06/06173651/1-Godolphin-and-Latymer-School-OCo-dining-library-and-sixth-form_Jim-Stephensoncrop-748x499.webp')">
+
+    <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-0"></div>
+
+    <div class="relative z-10 pt-20 pb-10 px-4">
+        <div class="max-w-5xl mx-auto space-y-6">
+
+            <!-- Estudiantes inscritos -->
+            <div class="bg-white/90 backdrop-blur rounded-2xl shadow-xl p-6">
+                <div class="flex items-center justify-between mb-4 pb-2 border-b border-gray-200">
+                    <h2 class="text-lg font-semibold text-gray-800">Estudiantes Inscritos</h2>
+                    <button id="inscribirEstudianteBtn"
+                        class="bg-black text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition">
+                        Inscribir Estudiante
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table id="estudiantesTable" class="w-full text-sm">
+                        <thead>
+                            <tr class="bg-black text-white">
+                                <th class="px-4 py-3 text-left font-semibold rounded-lg">Codigo de Estudiante</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tareas asignadas -->
+            <div class="bg-white/90 backdrop-blur rounded-2xl shadow-xl p-6">
+                <div class="flex items-center justify-between mb-4 pb-2 border-b border-gray-200">
+                    <h2 class="text-lg font-semibold text-gray-800">Tareas Asignadas al Grupo</h2>
+                    <button id="asignarTareaBtn"
+                        class="bg-black text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition">
+                        Asignar Tarea
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table id="tareasTable" class="w-full text-sm">
+                        <thead>
+                            <tr class="bg-black text-white">
+                                <th class="px-4 py-3 text-left font-semibold rounded-tl-lg">Tarea</th>
+                                <th class="px-4 py-3 text-left font-semibold">Descripcion</th>
+                                <th class="px-4 py-3 text-left font-semibold">Fecha de Inicio</th>
+                                <th class="px-4 py-3 text-left font-semibold">Fecha Final</th>
+                                <th class="px-4 py-3 text-left font-semibold">Entregas</th>
+                                <th class="px-4 py-3 text-left font-semibold">Editar</th>
+                                <th class="px-4 py-3 text-left font-semibold rounded-tr-lg">Eliminar</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</body>
+</html>
