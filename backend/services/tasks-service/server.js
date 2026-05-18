@@ -23,6 +23,24 @@ function authenticate(req, res, next) {
   }
 }
 
+// GET /tareas/:tareaId — metadatos (p. ej. autorización de entregas)
+app.get('/tareas/:tareaId', authenticate, async (req, res) => {
+  const tareaId = Number(req.params.tareaId);
+  if (!Number.isFinite(tareaId)) {
+    return res.status(400).json({ error: 'ID de tarea inválido' });
+  }
+  try {
+    const [rows] = await db.promise().execute(
+      'SELECT tarea_id, group_id, titulo FROM Tareas WHERE tarea_id = ?',
+      [tareaId]
+    );
+    if (!rows.length) return res.status(404).json({ error: 'Tarea no encontrada' });
+    res.json({ tarea: rows[0] });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // POST /listarTareas
 app.post('/listarTareas', authenticate, async (req, res) => {
   try {

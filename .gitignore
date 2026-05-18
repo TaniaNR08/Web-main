@@ -1,6 +1,11 @@
 # Dependencias
 node_modules/
 
+# Angular
+frontend/dist/
+frontend/.angular/
+frontend-ng/
+
 # Variables de entorno
 .env
 .env.local

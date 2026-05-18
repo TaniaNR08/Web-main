@@ -27,6 +27,7 @@ app.post('/login', async (req, res) => {
     }
 
     const userType = results[0].rol;
+    const nombre   = results[0].nombre;
     const token = jwt.sign({ user_id: user, rol: userType }, JWT_SECRET, { expiresIn: '1h' });
 
     // Llamar a groups-service para obtener grupos o asignaturas
@@ -35,7 +36,7 @@ app.post('/login', async (req, res) => {
         headers: { Authorization: `Bearer ${token}` }
       });
       const { grupos } = await response.json();
-      return res.json({ redirect: '/pages/gruposProfesor.html', grupos: grupos || [], token, rol: userType });
+      return res.json({ redirect: '/pages/gruposProfesor.html', grupos: grupos || [], token, rol: userType, nombre });
     }
 
     if (userType === 'estudiante') {
@@ -43,11 +44,11 @@ app.post('/login', async (req, res) => {
         headers: { Authorization: `Bearer ${token}` }
       });
       const { asignaturas } = await response.json();
-      return res.json({ redirect: '/pages/asignaturasEstudiante.html', asignaturas: asignaturas || [], token, rol: userType });
+      return res.json({ redirect: '/pages/asignaturasEstudiante.html', asignaturas: asignaturas || [], token, rol: userType, nombre });
     }
 
     if (userType === 'administrador') {
-      return res.json({ redirect: '/pages/panelAdmin.html', token, rol: userType });
+      return res.json({ redirect: '/pages/panelAdmin.html', token, rol: userType, nombre });
     }
 
   } catch (err) {
@@ -126,6 +127,28 @@ app.delete('/usuarios/:id', authenticate, soloAdmin, async (req, res) => {
       'DELETE FROM Usuarios WHERE user_id = ?', [Number(req.params.id)]
     );
     res.json({ message: 'Usuario eliminado correctamente' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /estudiantes — listar estudiantes (profesor o administrador)
+app.get('/estudiantes', authenticate, async (req, res) => {
+  if (req.user.rol !== 'profesor' && req.user.rol !== 'administrador') {
+    return res.status(403).json({ error: 'Acceso denegado' });
+  }
+  const q = String(req.query.q || '').trim();
+  try {
+    let sql = 'SELECT user_id, nombre FROM Usuarios WHERE rol = ?';
+    const params = ['estudiante'];
+    if (q) {
+      sql += ' AND (CAST(user_id AS CHAR) LIKE ? OR nombre LIKE ?)';
+      const like = `%${q}%`;
+      params.push(like, like);
+    }
+    sql += ' ORDER BY nombre ASC';
+    const [estudiantes] = await db.promise().execute(sql, params);
+    res.json({ estudiantes });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

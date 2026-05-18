@@ -1,6 +1,6 @@
 # SchoolWebPro - San Francisco de Asis
 
-Full Stack Project: School management web platform. Built with Vanilla CSS, JavaScript, ExpressJS, and powered by MySQL. Microservices architecture.
+Full Stack Project: School management web platform. Frontend Angular 19, backend ExpressJS y MySQL. Arquitectura de microservicios.
 
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
@@ -29,12 +29,34 @@ cd frontend
 npm start
 ```
 
-Abre `http://localhost:5500` en el navegador.
+Abre `http://localhost:4200` en el navegador.
 
-## In Action Screenshots
+## Capturas de pantalla
 
-![Vista 1](frontend/assets/img/1.png)
-![Vista 2](frontend/assets/img/2.png)
-![Vista 3](frontend/assets/img/3.png)
-![Vista 4](frontend/assets/img/4.png)
-![Vista 5](frontend/assets/img/5.png)
+### Sitio público e inicio de sesión
+
+| Página principal | Inicio de sesión |
+| --- | --- |
+| ![Landing](frontend/public/assets/img/landing-principal.png) | ![Login](frontend/public/assets/img/login.png) |
+
+### Panel administrador
+
+| Principal | Noticias | Eventos |
+| --- | --- | --- |
+| ![Admin principal](frontend/public/assets/img/admin-principal.png) | ![Admin noticias](frontend/public/assets/img/admin-noticias.png) | ![Admin eventos](frontend/public/assets/img/admin-eventos.png) |
+
+| Documentos | Mensajes de contacto | Admisiones |
+| --- | --- | --- |
+| ![Admin documentos](frontend/public/assets/img/admin-documentos.png) | ![Admin contactos](frontend/public/assets/img/admin-contactos.png) | ![Admin admisiones](frontend/public/assets/img/admin-admisiones.png) |
+
+### Panel profesor
+
+| Mis grupos | Detalle del grupo | Calificación de entregas |
+| --- | --- | --- |
+| ![Profesor principal](frontend/public/assets/img/profesor-principal.png) | ![Profesor grupo](frontend/public/assets/img/profesor-grupo.png) | ![Profesor calificación](frontend/public/assets/img/profesor-calificacion.png) |
+
+### Panel estudiante
+
+| Mis asignaturas | Tareas y calificaciones |
+| --- | --- |
+| ![Estudiante principal](frontend/public/assets/img/Estudiate-principal.png) | ![Estudiante tareas](frontend/public/assets/img/Estudiante-tareas.png) |
